@@ -87,7 +87,7 @@ def user_login(request):
             messages.error(request, "Invalid username or password")
             return redirect("login")
 
-    return render(request, "index.html")
+    return render(request, "sign_in.html")
 
 # ------------------ LOGOUT VIEW ------------------
 def user_logout(request):
