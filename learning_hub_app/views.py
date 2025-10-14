@@ -121,6 +121,9 @@ def admin_dashboard(request):
 def BASE(request):
     return render(request, 'index.html')
 
+def BASES(request):
+    return render(request, 'student/index.html')
+
 def sign_up(request):
     return render(request, 'sign_up.html')
 
