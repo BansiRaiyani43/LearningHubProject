@@ -110,13 +110,10 @@ def admin_dashboard(request):
 def BASE(request):
     return render(request, 'index.html')
 
-<<<<<<< HEAD
 def BASET(request):
     return render(request, 'teacher/index.html')
-=======
 def BASES(request):
     return render(request, 'student/index.html')
->>>>>>> 6b41e167a156d554e465e5d9565661455bd6e7eb
 
 def sign_up(request):
     return render(request, 'sign_up.html')
