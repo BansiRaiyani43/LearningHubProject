@@ -10,7 +10,6 @@ class User(AbstractUser):
     )
 
     role = models.CharField(max_length=20, choices=USER_ROLES, default='student')
-    email = models.EmailField(_('email address'), unique=True)  # unique email
     phone_no = models.BigIntegerField(null=True, blank=True)   # optional phone number
 
     def __str__(self):

@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.urls import path
-from .views import BASE,sign_up, sign_in, user_login, user_logout, student_dashboard, teacher_dashboard, admin_dashboard,register
+from .views import BASE,BASET, sign_up, sign_in, user_login, user_logout, student_dashboard, teacher_dashboard, admin_dashboard,register
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [ 
+    path('',register,name='register'),
     path('index/',BASE,name='index'),
+    path('indext/',BASET,name='indext'),
     path('signup/',register,name='signup'),
     # path('signin/',sign_in,name='signin'),
     path("login/", user_login, name="login"),
