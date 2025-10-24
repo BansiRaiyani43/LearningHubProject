@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 from .views import BASE,BASET, sign_up, sign_in, user_login, user_logout, student_dashboard, teacher_dashboard, admin_dashboard,register
 from .views import BASE,BASES,sign_up, sign_in, user_login, user_logout, student_dashboard, teacher_dashboard, admin_dashboard,register
