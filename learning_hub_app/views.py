@@ -68,7 +68,7 @@ def user_login(request):
                 print("Redirecting to teacher dashboard")
                 return redirect("teacher_dashboard")
             elif user.role == "admin":
-                return redirect("admin_dashboard")
+                return redirect("/admin/")
             else:
                 messages.error(request, "Invalid role assigned.")
                 return redirect('login')
@@ -86,7 +86,7 @@ def user_logout(request):
 # ------------------ DASHBOARD VIEWS ------------------
 @login_required
 def student_dashboard(request):
-    return render(request, "index.html")
+    return render(request, "student/index.html")
 
 @login_required
 def teacher_dashboard(request): 
