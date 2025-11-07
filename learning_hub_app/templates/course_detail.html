@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <style>
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        background-color: #f7f9fc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .card {
+        background: white;
+        width: 600px;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      h2 {
+        color: #333;
+        font-size: 26px;
+        margin-bottom: 10px;
+      }
+
+      .instructor {
+        color: #04AA6D;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        color: #555;
+        line-height: 1.6;
+        text-align: justify;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        background-color: #5d51a1;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 6px;
+        transition: 0.3s;
+      }
+
+      a:hover {
+        background-color: #4a3b8e;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <h2>{{ d.title }}</h2>
+      <p class="instructor">Instructor: {{ d.instructor }}</p>
+      <p>{{ d.description }}</p>
+      <a href="{% url 'courses_list' %}">← Back to Course List</a>
+    </div>
+  </body>
+</html>
+
+
+
+
+
+{% comment %} <html>
+    <body>
+        <h2>{{ d.title }}</h2>
+        <p><strong>Instructor:</strong>{{ d.instructor }}</p>
+        <p>{{ d.description }}</p>
+
+        <a href="{% url 'courses_list' %}">Back to list</a>
+    </body>
+</html> {% endcomment %}

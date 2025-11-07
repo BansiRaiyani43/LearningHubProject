@@ -15,9 +15,9 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.username} ({self.role})"
 
-class course(models.Model):
+class Course(models.Model):
     title = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(default="")
     instructor = models.CharField(max_length=50)
 
     def __str__(self):

@@ -1,0 +1,237 @@
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f7f7f7;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        border: 1px solid  #04AA6D;
+        overflow: hidden;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+      }
+
+      th, td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid  #a09e9eff;
+        
+      }
+      .desc{
+        text-align: justify;
+      }
+
+      th {
+        background-color: #04AA6D;
+        color: white;
+        border: 1px solid #ffffffff;
+      }
+
+      tr:hover {
+        background-color: #f2f2f2;
+      }
+
+      .action-buttons {
+        display: grid;
+        justify-content: center;
+        gap: 15px; /* space between buttons */
+      }
+
+      .view-btn {
+        background-color: #51a19d;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      .add-btn {
+        background-color: #5d51a1;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      .edt-btn {
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      .del-btn {
+        background-color: #f44336;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      .add-course-top {
+        background-color: #5d51a1;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 15px;
+        transition: 0.3s;
+      }
+
+      .add-course-top:hover,
+      .view-btn:hover,
+      .add-btn:hover,
+      .edt-btn:hover,
+      .del-btn:hover {
+        opacity: 0.8;
+      }
+
+      .total {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      p{
+        align: right;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2 style="text-align:center">Course List</h2>
+    <div style="display:flex;">
+    <!-- ✅ Add Course button above table -->
+    <a href="{% url 'add_course' %}" class="add-course-top">+ Add New Course</a>
+    <p class="total" style="padding-left: 580px">Total courses: {{ course|length }}</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Instructor</th>
+          <th>Detail</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for a in course %}
+        <tr>
+          <td>{{ a.title }}</td>
+          <td class="desc">{{ a.description }}</td>
+          <td>{{ a.instructor }}</td>
+          <td>
+            <a href="{% url 'course_detail' a.id %}" class="view-btn">View</a>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a href="{% url 'edit_course' a.id %}" class="edt-btn">Update</a>
+              <a href="{% url 'delete_course' a.id %}" class="del-btn">Delete</a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No courses available.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+{% comment %} <html>
+    <head>
+        <style>
+            td {
+                text-align:center;
+            }
+            tr:hover {background-color: #e7e3e3ff;}
+
+            .del-btn {
+                background-color: #f44336;
+                color: white;
+                 margin-: -50px;
+                text-decoration: none;
+                padding: 4px 7px;
+                border-radius: 5px;
+            }
+            .edt-btn {
+                background-color: #4CAF50;
+                color: white;
+                text-decoration: none;
+                padding: 4px 7px;
+                border-radius: 5px;
+            }
+            .view-btn {
+                background-color: #51a19dff;
+                color: white;
+                text-decoration: none;
+                padding: 4px 7px;
+                border-radius: 5px;
+            }
+            .add-btn {
+                background-color: #5d51a1ff;
+                color: white;
+                text-decoration: none;
+                padding: 4px 7px;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <table border="1">
+            <thead style="background-color: #04AA6D;color: white;">
+                <tr>
+                    <th>title</th>
+                    <th>description</th>
+                    <th>instructor</th>
+                    <th>detail</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in course %}
+                <tr class="text-center pt-3">
+                <td style="text-align:center">{{a.title}}</td>
+                <td>{{a.description}}</td>
+                <td>{{a.instructor}}</td>
+                <td>
+                    <a href="{% url 'course_detail' a.id %}" class="view-btn">View</a></td>
+                <td>
+                    <a href="{% url 'add_course' %}" class="add-btn">Add</a>
+                    <a href="{% url 'edit_course' a.id %}" class="edt-btn">Update</a>
+                    <a href="{% url 'delete_course' a.id %}" class="del-btn">Delete</a>
+                </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3">No courses available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+         <p>Total courses: {{ course|length }}</p>
+    </body>
+</html> {% endcomment %}
+

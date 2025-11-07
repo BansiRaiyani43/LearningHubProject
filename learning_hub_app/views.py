@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from .models import User
+from .models import User,Course
+from django.contrib import messages
 
 User = get_user_model()
 
@@ -35,6 +36,9 @@ def register(request):
             role=role,
             password=password1
           )
+            if role == "admin":
+                user.is_staff = True
+                user.is_superuser = True
             user.save()
 
             messages.success(request, "Account created successfully! Please log in.")
@@ -86,7 +90,7 @@ def user_logout(request):
 # ------------------ DASHBOARD VIEWS ------------------
 @login_required
 def student_dashboard(request):
-    return render(request, "student/index.html")
+    return render(request, "student/student_dashboard.html")
 
 @login_required
 def teacher_dashboard(request): 
@@ -94,15 +98,73 @@ def teacher_dashboard(request):
 
 @login_required
 def admin_dashboard(request):
-    return render(request, "index.html")
+    return render(request, "admin/admin_dashbord.html")
 
+########------course model------########
 
+def courses_list(request):
+    all_course = Course.objects.all()
+    return render(request,'course_list.html',{'course':all_course})
 
+def add_course(request):
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        instructor = request.POST.get('instructor')
 
+        if title and description and instructor:
+            Course.objects.create(title=title, description=description, instructor=instructor)
+            messages.success(request, "Course added successfully!")
+            return redirect('courses_list')
+        else:
+            messages.error(request, "Please fill all fields.")
 
+    return render(request, 'add_course.html')
 
+def course_detail(request,id):
+    one_course = get_object_or_404(Course, id=id)
+    return render(request,'course_detail.html',{'d':one_course})
 
+def delete_course(request,id):
+    dc = Course.objects.get(id=id)
+    dc.delete()
+    return redirect('courses_list')
 
+def edit_course(request, id):
+    course = get_object_or_404(Course, id=id)
+
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        instructor = request.POST.get('instructor')
+
+        if title and description and instructor:
+            course.title = title
+            course.description = description
+            course.instructor = instructor
+            course.save()
+            messages.success(request, "Course updated successfully!")
+            return redirect('courses_list')
+        else:
+            messages.error(request, "Please fill all fields.")
+
+    return render(request, 'edit_course.html', {'course': course})
+
+# def edit_course(request,id):
+#     c1 = get_object_or_404(Course,id=id)
+#     c2 = Course.objects.all()
+#     if request.method == "POST":
+#         c1.title = request.POST['title']
+#         c1.description = request.POST['description']
+#         c1.instructor = request.POST['instructor']
+#         c1.save()
+#         return redirect('courses_list')
+#     else:
+#         c3 = Course.objects.get(id=id)
+#         context = {
+#             "i": c3
+#         }
+#         return render(request,"edit_course.html",{'i':c1, 'course':c2})
 
 
 
@@ -111,7 +173,7 @@ def BASE(request):
     return render(request, 'index.html')
 
 def BASET(request):
-    return render(request, 'teacher/index.html')
+    return render(request, 'teacher/teacher_dashboard.html')
 def BASES(request):
     return render(request, 'student/index.html')
 
