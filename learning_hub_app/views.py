@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from .models import User,Course
-from django.contrib import messages
+from .models import User,Course,Subject
+
 
 User = get_user_model()
 
@@ -36,9 +36,6 @@ def register(request):
             role=role,
             password=password1
           )
-            if role == "admin":
-                user.is_staff = True
-                user.is_superuser = True
             user.save()
 
             messages.success(request, "Account created successfully! Please log in.")
@@ -48,31 +45,34 @@ def register(request):
 # ------------------ LOGIN VIEW ------------------
 def user_login(request):
     if request.method == "POST":
-        username = request.POST.get("username")
+        # username = request.POST.get("username")
+        email = request.POST.get("email")
         password = request.POST.get("password")
-        print("DEBUG → username:", username, "password:", password)
-
-
-        user = authenticate(request, username=username, password=password)
-        print("DEBUG → user:", user)
-
+        
+        try:
+            user_obj = User.objects.get(email=email)
+            username = user_obj.username
+        except User.DoesNotExist:
+            messages.error(request,"invalid email or password")
+            return redirect("login")
+        
+        user = authenticate(request,username=username, password=password)
 
         if user is not None:
             if not user.is_active:
                 messages.error(request, "Your account is inactive")
                 return redirect("login")
             login(request, user)
-            print("DEBUG → user.role:", user.role)
+            
 
 
             # Redirect based on role
             if user.role == "student":
                 return redirect("student_dashboard")
             elif user.role == "teacher":
-                print("Redirecting to teacher dashboard")
                 return redirect("teacher_dashboard")
             elif user.role == "admin":
-                return redirect("/admin/")
+                return redirect("admin_dashbord.html")
             else:
                 messages.error(request, "Invalid role assigned.")
                 return redirect('login')
@@ -149,6 +149,51 @@ def edit_course(request, id):
             messages.error(request, "Please fill all fields.")
 
     return render(request, 'edit_course.html', {'course': course})
+
+#---------------SUBJECT MODELS----------------#
+# list all subject:
+def subject_list(request):
+    subjects = Subject.objects.all()
+    return render(request,"subject_list.html",{'s':subjects})
+
+# create a subject:
+def subject_add(request):
+    courses = Course.objects.all()
+    if request.method == "POST":
+        name = request.POST.get('name')
+        code = request.POST.get('code')
+        description = request.POST.get('description')
+        course_id = request.POST.get('course')
+
+        course = get_object_or_404(Course, id=course_id)
+        Subject.objects.create(name=name, code=code, course=course, description=description,)
+        messages.success(request, "Subject added successfully!")
+        return redirect('subject_list')
+
+    return render(request, 'add_subject.html', {'a': courses})
+
+# update a subject
+def subject_update(request,id):
+    subject = get_object_or_404(Subject,id=id)
+    courses = Course.objects.all()
+
+    if request.method == "POST":
+        subject.name = request.POST.get('name')
+        subject.code = request.POST.get('code')
+        subject.description = request.POST.get('description')
+        course_id = request.POST.get('course')
+        subject.course = get_object_or_404(Course, id=course_id)
+        subject.save()
+        messages.success(request,"Subject Updated successfully!")
+        return render('subject_list')
+    
+    return render(request, "update_subject.html",{'subject':subject,'u':courses})
+
+def subject_delete(request,id):
+    ds = Subject.objects.get(id=id)
+    ds.delete()
+    return redirect('subject_list')
+
 
 # def edit_course(request,id):
 #     c1 = get_object_or_404(Course,id=id)
