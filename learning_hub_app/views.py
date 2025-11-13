@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from .models import User,Course,Subject
+from .models import User,Course,Subject,Chapter
 
 
 User = get_user_model()
@@ -104,7 +104,7 @@ def admin_dashboard(request):
 
 def courses_list(request):
     all_course = Course.objects.all()
-    return render(request,'course_list.html',{'course':all_course})
+    return render(request,'student/course_list.html',{'course':all_course})
 
 def add_course(request):
     if request.method == "POST":
@@ -194,22 +194,12 @@ def subject_delete(request,id):
     ds.delete()
     return redirect('subject_list')
 
+#----------------Chapter model----------------#
+#list of chapters
+def chapter_list(request):
+    chapters = Chapter.objects.select_related('subject').all()
+    return render(request,'chapter_list.html',{'chapters':chapters})
 
-# def edit_course(request,id):
-#     c1 = get_object_or_404(Course,id=id)
-#     c2 = Course.objects.all()
-#     if request.method == "POST":
-#         c1.title = request.POST['title']
-#         c1.description = request.POST['description']
-#         c1.instructor = request.POST['instructor']
-#         c1.save()
-#         return redirect('courses_list')
-#     else:
-#         c3 = Course.objects.get(id=id)
-#         context = {
-#             "i": c3
-#         }
-#         return render(request,"edit_course.html",{'i':c1, 'course':c2})
 
 
 

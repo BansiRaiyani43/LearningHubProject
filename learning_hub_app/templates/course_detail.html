@@ -1,87 +1,29 @@
-<html>
-  <head>
-    <style>
-      body {
-        font-family: "Poppins", Arial, sans-serif;
-        background-color: #f7f9fc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      }
+{% extends 'teacher/basefile.html' %}
+{% block body %}
 
-      .card {
-        background: white;
-        width: 600px;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        transition: 0.3s ease;
-      }
+<div class="container-fluid mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm p-4" style="border-radius: 20px; background: #fff;">
+        <h2 class="text-center fw-bold mb-4">{{ d.title }}</h2>
 
-      .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
-      }
+        <div class="mb-3">
+          <h4 class="text-primary mb-1">Instructor :   {{ d.instructor }}</h4>
+          <p class="text-dark"></p>
+        </div>
 
-      h2 {
-        color: #333;
-        font-size: 26px;
-        margin-bottom: 10px;
-      }
+        <div class="mb-3">
+         <p class="text-muted">{{ d.description }}</p>
+        </div>
 
-      .instructor {
-        color: #04AA6D;
-        font-weight: bold;
-        font-size: 18px;
-        margin-bottom: 20px;
-      }
-
-      p {
-        color: #555;
-        line-height: 1.6;
-        text-align: justify;
-      }
-
-      a {
-        display: inline-block;
-        margin-top: 20px;
-        text-decoration: none;
-        background-color: #5d51a1;
-        color: white;
-        padding: 8px 15px;
-        border-radius: 6px;
-        transition: 0.3s;
-      }
-
-      a:hover {
-        background-color: #4a3b8e;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="card">
-      <h2>{{ d.title }}</h2>
-      <p class="instructor">Instructor: {{ d.instructor }}</p>
-      <p>{{ d.description }}</p>
-      <a href="{% url 'courses_list' %}">← Back to Course List</a>
+        <div class="text-center mt-4">
+          <a href="{% url 'courses_list' %}" class="btn btn-primary">
+            ← Back to Course List
+          </a>
+        </div>
+      </div>
     </div>
-  </body>
-</html>
+  </div>
+</div>
 
-
-
-
-
-{% comment %} <html>
-    <body>
-        <h2>{{ d.title }}</h2>
-        <p><strong>Instructor:</strong>{{ d.instructor }}</p>
-        <p>{{ d.description }}</p>
-
-        <a href="{% url 'courses_list' %}">Back to list</a>
-    </body>
-</html> {% endcomment %}
+{% endblock %}

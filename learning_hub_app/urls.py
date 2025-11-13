@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import BASE,BASET,BASES, sign_up, sign_in, user_login, user_logout, student_dashboard, teacher_dashboard, admin_dashboard,register,courses_list,add_course,course_detail,delete_course, edit_course
-from .views import subject_list,subject_add,subject_update,subject_delete
+from .views import subject_list,subject_add,subject_update,subject_delete,chapter_list
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -22,5 +22,6 @@ urlpatterns = [
     path("subjects/",  subject_list, name='subject_list'),
     path("add_subject/",  subject_add, name='add_subject'),
     path("update_subject/<int:id>/",  subject_update, name='update_subject'),
-    path("delete_subject/<int:id>/", subject_delete, name='delete_subject')
+    path("delete_subject/<int:id>/", subject_delete, name='delete_subject'),
+    path("chapters/",  chapter_list, name='chapters')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

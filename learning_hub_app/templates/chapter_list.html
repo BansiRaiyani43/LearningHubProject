@@ -108,46 +108,40 @@
     </style>
   </head>
   <body>
-    <h2 style="text-align:center">Course List</h2>
+    <h2 style="text-align:center">Chapters List</h2>
     <div style="display:flex;">
     <!-- ✅ Add Course button above table -->
     <a href="{% url 'add_course' %}" class="add-course-top">+ Add New Course</a>
-    <p class="total" style="padding-left: 580px">Total courses: {{ course|length }}</p>
+    <p class="total" style="padding-left: 580px">Total courses: {{ chapters|length }}</p>
     </div>
 
     <table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Instructor</th>
-          <th>Detail</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {% for a in course %}
-        <tr>
-          <td>{{ a.title }}</td>
-          <td class="desc">{{ a.description }}</td>
-          <td>{{ a.instructor }}</td>
-          <td>
-            <a href="{% url 'course_detail' a.id %}" class="view-btn">View</a>
-          </td>
-          <td>
-            <div class="action-buttons">
-              <a href="{% url 'edit_course' a.id %}" class="edt-btn">Update</a>
-              <a href="{% url 'delete_course' a.id %}" class="del-btn">Delete</a>
-            </div>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="5">No courses available.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+      <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Subject</th>
+                <th>Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chapter in chapters %}
+            <tr>
+                <td>{{ chapter.id }}</td>
+                <td><a href="{% url 'chapter_view' chapter.id %}" class="text-decoration-none">{{ chapter.title }}</a></td>
+                <td>{{ chapter.subject.name }}</td>
+                <td>{{ chapter.number }}</td>
+                <td>
+                    <a href="{% url 'chapter_update' chapter.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'chapter_delete' chapter.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">No chapters available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>  
     </table>
     
   </body>
@@ -233,4 +227,3 @@
          <p>Total courses: {{ course|length }}</p>
     </body>
 </html> {% endcomment %}
-

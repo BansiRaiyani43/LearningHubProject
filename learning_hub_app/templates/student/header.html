@@ -15,15 +15,9 @@
       </div>
       <nav class="sidebar-nav">
         <ul>
-          <li class="nav-item nav-item-has-children">
+          <li class="nav-item">
             <a
-              href="#0"
-              data-bs-toggle="collapse"
-              data-bs-target="#ddmenu_1"
-              aria-controls="ddmenu_1"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
+              href="{% url 'student_dashboard' %}">
               <span class="icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -36,7 +30,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="invoice.html">
+            <a href="{% url 'courses_list' %}">
               <span class="icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path

@@ -1,69 +1,56 @@
-<html>
-    <head>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 40px;
-        background-color: #f5f5f5;
-      }
+{% extends 'student/basefile.html' %}
+{% block body %}
+      <!-- ========== table components start ========== -->
+      <section class="table-components">
+        <div class="container-fluid">
+          <!-- ========== title-wrapper start ========== -->
+          <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+              <div class="col-md-12 text-center">
+                <div class="title">
+                  <h2>Add New Course</h2>
+                </div>
+              </div>
+              <!-- end col -->
+            </div>
+            <!-- end row -->
+          </div>
+          <!-- ========== title-wrapper end ========== -->
 
-      form {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        width: 800px;
-        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-      }
-
-      input[type="text"],
-      textarea {
-        width: 100%;
-        padding: 8px;
-        margin: 6px 0 12px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
-
-      button {
-        padding: 8px 15px;
-        border: none;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      .save-btn {
-        background-color: #4CAF50;
-        color: white;
-        
-      }
-
-      .cancel-btn {
-        background-color: #f44336;
-        color: white;
-        margin-left: 10px;
-        text-decoration: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-      }
-    </style>
-  </head>
-    <body>
-        <h2 style="text-align:center">Add New Course</h2>
-        <form method="POST">
+  <section class="form-components pt-30">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="card-style mb-30 p-4">
+          <form method="POST">
             {% csrf_token %}
-            <label>Title:</label><br>
-            <input type="text" name="title"><br><br>
+            <!-- Title -->
+            <div class="mb-3">
+              <label for="title" class="form-label" style="font-weight: 600;">Course Title</label>
+              <input type="text" name="title" id="title" class="form-control" placeholder="Enter course title" required>
+            </div>
 
-            <label>Description:</label><br>
-            <textarea name="description"></textarea><br><br>
+            <!-- Description -->
+            <div class="mb-3">
+              <label for="description" class="form-label" style="font-weight: 600;">Description</label>
+              <textarea name="description" id="description" class="form-control" rows="4" placeholder="Enter course description" required></textarea>
+            </div>
 
-            <label>Instructor:</label><br>
-            <input type="text" name="instructor"><br><br>
+            <!-- Instructor -->
+            <div class="mb-3">
+              <label for="instructor" class="form-label" style="font-weight: 600;">Instructor</label>
+              <input type="text" name="instructor" id="instructor" class="form-control" placeholder="Enter instructor name" required>
+            </div>
 
-            <button type="submit" class="Save-btn">Save</button>
-            <a href="{% url 'courses_list' %}" class="cancel-btn">Cancel</a>
-        </form>
-
-    </body>
-</html>
+            <!-- Buttons -->
+            <div class="d-flex justify-content-center mt-4">
+              <button type="submit" class="main-btn success-btn btn-hover me-2">Save Course</button>
+              <a href="{% url 'courses_list' %}" class="main-btn danger-btn btn-hover">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

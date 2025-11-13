@@ -1,86 +1,84 @@
-<html>
-  <head>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 40px;
-        background-color: #f5f5f5;
-      }
+{% extends 'student/basefile.html' %}
+{% block body %}
 
-      form {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        width: 800px;
-        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-      }
+<section class="section">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        
+        <div class="card shadow-sm border-0 rounded-4 mt-5">
+          <div class="card-body p-4">
+            
+            <!-- Page Heading -->
+            <h3 class="text-center mb-4 fw-semibold">
+              {% if course %}Update Course{% else %}Add New Course{% endif %}
+            </h3>
 
-      input[type="text"],
-      textarea {
-        width: 100%;
-        padding: 8px;
-        margin: 6px 0 12px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
+            <!-- Django Messages -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
 
-      button {
-        padding: 8px 15px;
-        border: none;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-      }
+            <!-- Form Start -->
+            <form method="POST">
+              {% csrf_token %}
 
-      .update-btn {
-        background-color: #4CAF50;
-        color: white;
-      }
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Course Title</label>
+                <input 
+                  type="text" 
+                  name="title" 
+                  class="form-control rounded-3" 
+                  placeholder="Enter course title" 
+                  value="{{ course.title|default:'' }}" 
+                  required
+                >
+              </div>
 
-      .cancel-btn {
-        background-color: #f44336;
-        color: white;
-        margin-left: 10px;
-        text-decoration: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-      }
-      .message {
-        margin-bottom: 15px;
-        color: green;
-        font-weight: bold;
-      }
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea 
+                  name="description" 
+                  class="form-control rounded-3" 
+                  rows="4" 
+                  placeholder="Write course description..." 
+                  required
+                >{{ course.description|default:'' }}</textarea>
+              </div>
 
-      .error {
-        color: red;
-      }
-    </style>
-  </head>
-  <body>
-    <h2 style="text-align: center">Edit Course</h2>
-    
-     <!-- show Django messages -->
-    {% if messages %}
-      {% for message in messages %}
-        <p class="{% if message.tags %}{{ message.tags }}{% endif %} message">
-          {{ message }}
-        </p>
-      {% endfor %}
-    {% endif %}
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Instructor</label>
+                <input 
+                  type="text" 
+                  name="instructor" 
+                  class="form-control rounded-3" 
+                  placeholder="Enter instructor name" 
+                  value="{{ course.instructor|default:'' }}" 
+                  required
+                >
+              </div>
 
-    <form method="POST">
-      {% csrf_token %}
-      <label>Title:</label><br>
-      <input type="text" name="title" value="{{ course.title }}"><br>
+              <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
+                  {% if course %}Update{% else %}Save{% endif %}
+                </button>
+                <a href="{% url 'courses_list' %}" class="btn btn-danger px-4 py-2 rounded-3 fw-semibold ms-2">
+                  Cancel
+                </a>
+              </div>
+            </form>
+            <!-- Form End -->
 
-      <label>Description:</label><br>
-      <textarea name="description">{{ course.description }}</textarea><br>
+          </div>
+        </div>
 
-      <label>Instructor:</label><br>
-      <input type="text" name="instructor" value="{{ course.instructor }}"><br>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <button type="submit" class="update-btn">Update</button>
-      <a href="{% url 'courses_list' %}" class="cancel-btn">Cancel</a>
-    </form>
-  </body>
-</html> 
+{% endblock %}

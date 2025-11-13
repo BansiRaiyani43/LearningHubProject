@@ -31,6 +31,19 @@ class Subject(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.code})"
+    
+class Chapter(models.Model):
+    subject = models.ForeignKey('Subject', on_delete=models.CASCADE, related_name='chapters')
+    title = models.CharField(max_length=100)
+    number = models.PositiveBigIntegerField(help_text="Chapter order number")
+    description = models.TextField(blank=True, null=True)
+    content = models.TextField(blank=True, null=True)
+
+    class Meta :
+        ordering = ['number']
+
+    def __str__(self):
+        return f"chapter {self.number} : {self.title}"
 
 
 
