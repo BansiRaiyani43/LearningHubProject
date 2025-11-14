@@ -1,0 +1,486 @@
+#----------------------course_list--------------------------------
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f7f7f7;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        border: 1px solid  #04AA6D;
+        overflow: hidden;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+      }
+
+      th, td {
+        padding: 8px;
+        text-align: center;
+        border: 1px solid  #a09e9eff;
+        
+      }
+      .desc{
+        text-align: justify;
+      }
+
+      th {
+        background-color: #04AA6D;
+        color: white;
+        border: 1px solid #ffffffff;
+      }
+
+      tr:hover {
+        background-color: #f2f2f2;
+      }
+
+      .action-buttons {
+        display: grid;
+        justify-content: center;
+        gap: 15px; /* space between buttons */
+      }
+
+      .view-btn {
+        background-color: #51a19d;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      .add-btn {
+        background-color: #5d51a1;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      .edt-btn {
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      .del-btn {
+        background-color: #f44336;
+        color: white;
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      .add-course-top {
+        background-color: #5d51a1;
+        color: white;
+        padding: 8px 5px;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 15px;
+        transition: 0.3s;
+      }
+
+      .add-course-top:hover,
+      .view-btn:hover,
+      .add-btn:hover,
+      .edt-btn:hover,
+      .del-btn:hover {
+        opacity: 0.8;
+      }
+
+      .total {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      p{
+        align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 style="text-align:center">Course List</h2>
+    <div style="display:flex;">
+    <!-- ✅ Add Course button above table -->
+    <a href="{% url 'add_course' %}" class="add-course-top">+ Add New Course</a>
+    <p class="total" style="padding-left: 580px">Total courses: {{ course|length }}</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Instructor</th>
+          <th>Detail</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for a in course %}
+        <tr>
+          <td>{{ a.title }}</td>
+          <td class="desc">{{ a.description }}</td>
+          <td>{{ a.instructor }}</td>
+          <td>
+            <a href="{% url 'course_detail' a.id %}" class="view-btn">View</a>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a href="{% url 'edit_course' a.id %}" class="edt-btn">Update</a>
+              <a href="{% url 'delete_course' a.id %}" class="del-btn">Delete</a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No courses available.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+{% comment %} <html>
+    <head>
+        <style>
+            td {
+                text-align:center;
+            }
+            tr:hover {background-color: #e7e3e3ff;}
+
+            .del-btn {
+                background-color: #f44336;
+                color: white;
+                 margin-: -50px;
+                text-decoration: none;
+                padding: 4px 7px;
+                border-radius: 5px;
+            }
+            .edt-btn {
+                background-color: #4CAF50;
+                color: white;
+                text-decoration: none;
+                padding: 4px 7px;
+                border-radius: 5px;
+            }
+            .view-btn {
+                background-color: #51a19dff;
+                color: white;
+                text-decoration: none;
+                padding: 4px 7px;
+                border-radius: 5px;
+            }
+            .add-btn {
+                background-color: #5d51a1ff;
+                color: white;
+                text-decoration: none;
+                padding: 4px 7px;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <table border="1">
+            <thead style="background-color: #04AA6D;color: white;">
+                <tr>
+                    <th>title</th>
+                    <th>description</th>
+                    <th>instructor</th>
+                    <th>detail</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in course %}
+                <tr class="text-center pt-3">
+                <td style="text-align:center">{{a.title}}</td>
+                <td>{{a.description}}</td>
+                <td>{{a.instructor}}</td>
+                <td>
+                    <a href="{% url 'course_detail' a.id %}" class="view-btn">View</a></td>
+                <td>
+                    <a href="{% url 'add_course' %}" class="add-btn">Add</a>
+                    <a href="{% url 'edit_course' a.id %}" class="edt-btn">Update</a>
+                    <a href="{% url 'delete_course' a.id %}" class="del-btn">Delete</a>
+                </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3">No courses available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+         <p>Total courses: {{ course|length }}</p>
+    </body>
+</html> {% endcomment %}
+
+
+#----------------------add_course:------------------------
+<html>
+    <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f5f5f5;
+      }
+
+      form {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 800px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0 12px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .save-btn {
+        background-color: #4CAF50;
+        color: white;
+        
+      }
+
+      .cancel-btn {
+        background-color: #f44336;
+        color: white;
+        margin-left: 10px;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+    <body>
+        <h2 style="text-align:center">Add New Course</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Title:</label><br>
+            <input type="text" name="title"><br><br>
+
+            <label>Description:</label><br>
+            <textarea name="description"></textarea><br><br>
+
+            <label>Instructor:</label><br>
+            <input type="text" name="instructor"><br><br>
+
+            <button type="submit" class="Save-btn">Save</button>
+            <a href="{% url 'courses_list' %}" class="cancel-btn">Cancel</a>
+        </form>
+
+    </body>
+</html>
+
+#-------------------------course_detail:-------------------------
+
+<html>
+  <head>
+    <style>
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        background-color: #f7f9fc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .card {
+        background: white;
+        width: 600px;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      h2 {
+        color: #333;
+        font-size: 26px;
+        margin-bottom: 10px;
+      }
+
+      .instructor {
+        color: #04AA6D;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        color: #555;
+        line-height: 1.6;
+        text-align: justify;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        background-color: #5d51a1;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 6px;
+        transition: 0.3s;
+      }
+
+      a:hover {
+        background-color: #4a3b8e;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <h2>{{ d.title }}</h2>
+      <p class="instructor">Instructor: {{ d.instructor }}</p>
+      <p>{{ d.description }}</p>
+      <a href="{% url 'courses_list' %}">← Back to Course List</a>
+    </div>
+  </body>
+</html>
+
+
+
+
+
+{% comment %} <html>
+    <body>
+        <h2>{{ d.title }}</h2>
+        <p><strong>Instructor:</strong>{{ d.instructor }}</p>
+        <p>{{ d.description }}</p>
+
+        <a href="{% url 'courses_list' %}">Back to list</a>
+    </body>
+</html> {% endcomment %}
+
+#----------------------------edit_course:---------------------------
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f5f5f5;
+      }
+
+      form {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 800px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0 12px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .update-btn {
+        background-color: #4CAF50;
+        color: white;
+      }
+
+      .cancel-btn {
+        background-color: #f44336;
+        color: white;
+        margin-left: 10px;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+      }
+      .message {
+        margin-bottom: 15px;
+        color: green;
+        font-weight: bold;
+      }
+
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 style="text-align: center">Edit Course</h2>
+    
+     <!-- show Django messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <p class="{% if message.tags %}{{ message.tags }}{% endif %} message">
+          {{ message }}
+        </p>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <label>Title:</label><br>
+      <input type="text" name="title" value="{{ course.title }}"><br>
+
+      <label>Description:</label><br>
+      <textarea name="description">{{ course.description }}</textarea><br>
+
+      <label>Instructor:</label><br>
+      <input type="text" name="instructor" value="{{ course.instructor }}"><br>
+
+      <button type="submit" class="update-btn">Update</button>
+      <a href="{% url 'courses_list' %}" class="cancel-btn">Cancel</a>
+    </form>
+  </body>
+</html> 

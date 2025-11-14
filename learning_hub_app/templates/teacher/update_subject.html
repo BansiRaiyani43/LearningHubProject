@@ -1,0 +1,93 @@
+{% extends 'teacher/basefile.html' %}
+{% block body %}
+
+<section class="section">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        
+        <div class="card shadow-sm border-0 rounded-4 mt-5">
+          <div class="card-body p-4">
+            
+            <!-- Page Heading -->
+            <h3 class="text-center mb-4 fw-semibold">Update Subject</h3>
+
+            <!-- Django Messages -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <!-- Form Start -->
+            <form method="POST">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Subject Name</label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  class="form-control rounded-3" 
+                  placeholder="Enter subject name" 
+                  value="{{ subject.name|default:'' }}" 
+                  required
+                >
+              </div>
+
+              
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Course Code</label>
+                <input 
+                  type="text" 
+                  name="code" 
+                  class="form-control rounded-3" 
+                  placeholder="Enter subject code" 
+                  value="{{ subject.code|default:'' }}" 
+                  required
+                >
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Course</label>
+                 <select name="course" class="form-select" required>
+                {% for course in u %}
+                    <option value="{{ course.id }}" {% if course.id == subject.course.id %}selected{% endif %}>{{ course.title }}</option>
+                {% endfor %}
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea 
+                  name="description" 
+                  class="form-control rounded-3" 
+                  rows="4" 
+                  placeholder="Write course description..." 
+                  required
+                >{{ subject.description|default:'' }}</textarea>
+              </div>
+
+              <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
+                  {% if subject %}Update{% else %}Save{% endif %}
+                </button>
+                <a href="{% url 'subject_list' %}" class="btn btn-danger px-4 py-2 rounded-3 fw-semibold ms-2">
+                  Cancel
+                </a>
+              </div>
+            </form>
+            <!-- Form End -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %} 

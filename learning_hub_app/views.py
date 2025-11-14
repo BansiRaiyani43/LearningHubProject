@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from .models import User,Course,Subject,Chapter
+from django.db import IntegrityError
+
 
 
 User = get_user_model()
@@ -104,7 +106,7 @@ def admin_dashboard(request):
 
 def courses_list(request):
     all_course = Course.objects.all()
-    return render(request,'student/course_list.html',{'course':all_course})
+    return render(request,'teacher/course_list.html',{'course':all_course})
 
 def add_course(request):
     if request.method == "POST":
@@ -119,11 +121,11 @@ def add_course(request):
         else:
             messages.error(request, "Please fill all fields.")
 
-    return render(request, 'add_course.html')
+    return render(request, 'teacher/add_course.html')
 
 def course_detail(request,id):
     one_course = get_object_or_404(Course, id=id)
-    return render(request,'course_detail.html',{'d':one_course})
+    return render(request,'teacher/course_detail.html',{'d':one_course})
 
 def delete_course(request,id):
     dc = Course.objects.get(id=id)
@@ -148,13 +150,13 @@ def edit_course(request, id):
         else:
             messages.error(request, "Please fill all fields.")
 
-    return render(request, 'edit_course.html', {'course': course})
+    return render(request, 'teacher/edit_course.html', {'course': course})
 
 #---------------SUBJECT MODELS----------------#
 # list all subject:
 def subject_list(request):
     subjects = Subject.objects.all()
-    return render(request,"subject_list.html",{'s':subjects})
+    return render(request,"teacher/subject_list.html",{'s':subjects})
 
 # create a subject:
 def subject_add(request):
@@ -170,7 +172,7 @@ def subject_add(request):
         messages.success(request, "Subject added successfully!")
         return redirect('subject_list')
 
-    return render(request, 'add_subject.html', {'a': courses})
+    return render(request, 'teacher/add_subject.html', {'a': courses})
 
 # update a subject
 def subject_update(request,id):
@@ -183,11 +185,15 @@ def subject_update(request,id):
         subject.description = request.POST.get('description')
         course_id = request.POST.get('course')
         subject.course = get_object_or_404(Course, id=course_id)
-        subject.save()
-        messages.success(request,"Subject Updated successfully!")
-        return render('subject_list')
+        
+        try:
+            subject.save()
+            messages.success(request, "Subject updated successfully!")
+            return redirect('subject_list')
+        except IntegrityError:
+            messages.error(request, "Subject code must be unique. This code already exists.")
     
-    return render(request, "update_subject.html",{'subject':subject,'u':courses})
+    return render(request, "teacher/update_subject.html",{'subject':subject,'u':courses})
 
 def subject_delete(request,id):
     ds = Subject.objects.get(id=id)
@@ -217,3 +223,5 @@ def sign_up(request):
 
 def sign_in(request):
     return render(request, 'sign_in.html')
+
+
