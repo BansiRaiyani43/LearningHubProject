@@ -96,7 +96,16 @@ def student_dashboard(request):
 
 @login_required
 def teacher_dashboard(request): 
-    return render(request, "teacher/teacher_dashboard.html")
+    courses = Course.objects.all()       # <-- add this
+    total_courses = courses.count()     # <-- count from queryset
+    total_students = User.objects.filter(role="student").count()
+
+    return render(request, "teacher/teacher_dashboard.html", {
+        'total_courses': total_courses,
+        'course': courses,     # <-- send course 
+        'total_students': total_students,
+    })                
+   
 
 @login_required
 def admin_dashboard(request):
@@ -154,9 +163,10 @@ def edit_course(request, id):
 
 #---------------SUBJECT MODELS----------------#
 # list all subject:
-def subject_list(request):
+def subject_list(request,course_id):
+    course = get_object_or_404(Course, id=course_id)
     subjects = Subject.objects.all()
-    return render(request,"teacher/subject_list.html",{'s':subjects})
+    return render(request,"teacher/subject_list.html",{'s':subjects,'course': course,})
 
 # create a subject:
 def subject_add(request):
@@ -213,8 +223,8 @@ def chapter_list(request):
 def BASE(request):
     return render(request, 'index.html')
 
-def BASET(request):
-    return render(request, 'teacher/teacher_dashboard.html')
+# def BASET(request):
+#     return render(request, 'teacher/teacher_dashboard.html')
 def BASES(request):
     return render(request, 'student/index.html')
 
@@ -223,5 +233,3 @@ def sign_up(request):
 
 def sign_in(request):
     return render(request, 'sign_in.html')
-
-
