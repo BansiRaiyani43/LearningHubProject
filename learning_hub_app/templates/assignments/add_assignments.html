@@ -1,0 +1,81 @@
+{% extends 'assignments/basefile.html' %}
+{% block body %}
+      <!-- ========== table components start ========== -->
+      <section class="table-components">
+        <div class="container-fluid">
+          <!-- ========== title-wrapper start ========== -->
+          <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+              <div class="col-md-12 text-center">
+                <div class="title">
+                  <h2>Add New Assignment</h2>
+                </div>
+              </div>
+              <!-- end col -->
+            </div>
+            <!-- end row -->
+          </div>
+          <!-- ========== title-wrapper end ========== -->
+
+  <section class="form-components pt-30">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="card-style mb-30 p-4">
+          <form method="POST">
+            {% csrf_token %}
+            <!-- selct chapter -->
+            <div class="mb-3">
+              <label for="chapter" class="form-label" style="font-weight: 600;">Chapter</label>
+              <select name="chapter" id="chapter" class="form-control" required>
+                  <option value="">-- Select Chapter --</option>
+                  {% for chapter in chapters %}
+                  <option value="{{ chapter.id }}">Chapter {{ chapter.number }} - {{ chapter.title }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+            <!-- title -->
+            <div class="mb-3">
+              <label for="title" class="form-label" style="font-weight: 600;">Assignment Title</label>
+              <input name="title" id="title" class="form-control"  placeholder="Enter Assignment title" required>
+            </div>
+
+            <!-- Course -->
+            
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label for="description" class="form-label" style="font-weight: 600;">Description</label>
+              <textarea name="description" id="description" class="form-control" rows="3" placeholder="Enter Assignment description" required></textarea>
+            </div>
+            
+            <!-- due_date -->
+            <div class="mb-3">
+              <label for="due_date" class="form-label" style="font-weight: 600;">Due Date</label>
+              <input type="date" name="due_date" id="due_date" class="form-control"  placeholder="Enter Assignment Due Date" required>
+            </div>
+
+            <!-- Marks -->
+            <div class="mb-3">
+              <label for="marks" class="form-label" style="font-weight: 600;">Marks</label>
+              <input type="number" name="marks" id="marks" class="form-control"  placeholder="Enter Assignment Marks" required>
+            </div>
+
+            <!-- File -->
+            <div class="mb-3">
+              <label for="file" class="form-label" style="font-weight: 600;">Upload file</label>
+              <input type="file" name="file" id="file" class="form-control" >
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-center mt-4">
+              <button type="submit" class="main-btn success-btn btn-hover me-2">Save</button>
+              <a href="{% url 'assignment_list' %}" class="main-btn danger-btn btn-hover">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

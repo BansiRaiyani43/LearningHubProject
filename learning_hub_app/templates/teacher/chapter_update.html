@@ -10,7 +10,7 @@
           <div class="card-body p-4">
             
             <!-- Page Heading -->
-            <h3 class="text-center mb-4 fw-semibold">Update Subject</h3>
+            <h3 class="text-center mb-4 fw-semibold">Update Chapter</h3>
 
             <!-- Django Messages -->
             {% if messages %}
@@ -29,10 +29,10 @@
                 <label class="form-label fw-semibold">Number</label>
                 <input 
                   type="text" 
-                  name="name" 
+                  name="number" 
                   class="form-control rounded-3" 
-                  placeholder="Enter subject name" 
-                  value="{{ subject.name|default:'' }}" 
+                  placeholder="Enter chapter number" 
+                  value="{{ chapter.number}}" 
                   required
                 >
               </div>
@@ -40,22 +40,21 @@
               
 
               <div class="mb-3">
-                <label class="form-label fw-semibold">Course Code</label>
+                <label class="form-label fw-semibold">Title</label>
                 <input 
                   type="text" 
-                  name="code" 
+                  name="title" 
                   class="form-control rounded-3" 
-                  placeholder="Enter subject code" 
-                  value="{{ subject.code|default:'' }}" 
-                  required
-                >
+                  placeholder="Enter chapter title" 
+                  value="{{ chapter.title}}" 
+                  required>
               </div>
 
               <div class="mb-3">
-                <label class="form-label fw-semibold">Course</label>
-                 <select name="course" class="form-select" required>
-                {% for course in u %}
-                    <option value="{{ course.id }}" {% if course.id == subject.course.id %}selected{% endif %}>{{ course.title }}</option>
+                <label class="form-label fw-semibold">Subject</label>
+                 <select name="subject" class="form-select" required>
+                {% for s in subjects %}
+                    <option value="{{ s.id }}" {% if s.id == chapter.subject.id %}selected{% endif %}>{{ s.name }}</option>
                 {% endfor %}
                 </select>
               </div>
@@ -66,9 +65,18 @@
                   name="description" 
                   class="form-control rounded-3" 
                   rows="4" 
-                  placeholder="Write course description..." 
-                  required
-                >{{ subject.description|default:'' }}</textarea>
+                  placeholder="Write chapter description..." 
+                  required>{{ chapter.description }}</textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Content</label>
+                <textarea 
+                  name="content" 
+                  class="form-control rounded-3" 
+                  rows="4" 
+                  placeholder="Write chapter content..." 
+                  required>{{ chapter.content }}</textarea>
               </div>
 
               <div class="text-center mt-4">

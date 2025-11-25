@@ -5,21 +5,22 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card shadow-sm p-4" style="border-radius: 20px; background: #fff;">
-        <h2 class="text-center fw-bold mb-4">{{ d.title }}</h2>
+        <h2 class="text-center fw-bold mb-4">{{ chapter.title }}</h2>
 
         <div class="mb-3">
-          <h4 class="text-primary mb-1">Instructor :   {{ d.instructor }}</h4>
+          <h4 class="text-primary mb-1">Chapter :   {{ chapter.subject }}</h4>
           <p class="text-dark"></p>
         </div>
 
         <div class="mb-3">
-         <p class="text-muted", style="text-align:justify;">{{ d.description }}</p>
+         <p class="text-muted", style="text-align:justify;">{{ chapter.description }}</p>
         </div>
 
+        
+
         <div class="text-center mt-4">
-          <a href="{% url 'courses_list' %}" class="btn btn-primary">
-            ← Back to Course List
-          </a>
+          <a href="{% url 'chapters' %}" class="btn btn-primary">
+            ← Back to Chapter List</a>
         </div>
       </div>
     </div>

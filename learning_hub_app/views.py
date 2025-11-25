@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from .models import User,Course,Subject,Chapter
+from .models import User,Course,Subject,Chapter,Assignment
 from django.db import IntegrityError
 
 
@@ -99,11 +99,13 @@ def teacher_dashboard(request):
     courses = Course.objects.all()       # <-- add this
     total_courses = courses.count()     # <-- count from queryset
     total_students = User.objects.filter(role="student").count()
+    total_assignments = Assignment.objects.count()
 
     return render(request, "teacher/teacher_dashboard.html", {
         'total_courses': total_courses,
         'course': courses,     # <-- send course 
         'total_students': total_students,
+        'total_assignments' : total_assignments,
     })                
    
 
@@ -163,12 +165,10 @@ def edit_course(request, id):
 
 #---------------SUBJECT MODELS----------------#
 # list all subject:
-def subject_list(request,course_id):
-    course = get_object_or_404(Course, id=course_id)
-    subjects = Subject.objects.all()
-    return render(request,"teacher/subject_list.html",{'s':subjects,'course': course,})
+def subject_list(request):
+    subjects = Subject.objects.select_related('course').all()
+    return render(request, "teacher/subject_list.html", {'s': subjects,'course': None,})
 
-# create a subject:
 def subject_add(request):
     courses = Course.objects.all()
     if request.method == "POST":
@@ -214,15 +214,115 @@ def subject_delete(request,id):
 #list of chapters
 def chapter_list(request):
     chapters = Chapter.objects.select_related('subject').all()
-    return render(request,'chapter_list.html',{'chapters':chapters})
+    return render(request,'teacher/chapter_list.html',{'chapters':chapters})
 
+def chapter_add(request):
+    subjects = Subject.objects.all()
+    if request.method == "POST":
+        subject_id = request.POST.get('subject')
+        number = request.POST.get('number')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        content = request.POST.get('content')
 
+        subject = get_object_or_404(Subject,id=subject_id)
+        Chapter.objects.create(title=title,number=number,subject=subject,description=description,content=content)
+        messages.success(request,"Chapeter added successfully")
+        return redirect('chapters')
+    
+    return render(request,"teacher/chapter_add.html",{'subjects': subjects})
 
+def chapter_update(request,id):
+    chapter = get_object_or_404(Chapter,id=id)
+    subjects = Subject.objects.all()
+
+    if request.method == "POST":
+        subject_id = request.POST.get('subject')
+        chapter.subject =get_object_or_404(Subject, id=subject_id)
+        chapter.title = request.POST.get('title')
+        chapter.number = request.POST.get('number')
+        chapter.description = request.POST.get('description')
+        chapter.content = request.POST.get('content')
+        chapter.save()
+        messages.success(request,"chapter updated successfully!")
+        return redirect('chapters')
+    
+    return render(request,"teacher/chapter_update.html",{'chapter':chapter,'subjects':subjects})
+
+def chapter_detail(request,id):
+    chapter = get_object_or_404(Chapter,id=id)
+    return render(request,"teacher/chapter_detail.html",{'chapter':chapter})
+
+def chapter_delete(request,id):
+    chapter = get_object_or_404(Chapter,id=id)
+    chapter.delete()
+    messages.success(request,"chapter deleted successfully!")
+    return redirect('chapters')
+
+    
+
+#----------------assignments model-------------#
+def assignment_list(request):
+    assignments = Assignment.objects.select_related('chapter').all()
+    return render(request,'assignments/assignments_list.html',{'assignments': assignments})
+
+def assignment_add(request):
+    chapters = Chapter.objects.all()
+
+    if request.method == "POST":
+        chapter_id = request.POST.get('chapter')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        due_date = request.POST.get('due_date')
+        marks = request.POST.get('marks')
+        file = request.FILES.get('file')
+        chapter = get_object_or_404(Chapter, id=chapter_id)
+
+        Assignment.objects.create(
+            chapter=chapter,
+            title= title,
+            description= description,
+            due_date = due_date,
+            marks = marks,
+            file = file
+        )
+        messages.success(request,"Assignment created successfully!")
+        return redirect('assignment_list')
+    
+    return render(request,"assignments/add_assignments.html",{'chapters':chapters})
+
+def assignment_view(request,id=id):
+    assignment = get_object_or_404(Assignment, id=id)
+    return render(request,"assignments/view_assignments.html",{"assignment":assignment})
+
+def assignment_update(request,id):
+    assignment = get_object_or_404(Assignment,id=id)
+    chapters = Chapter.objects.all()
+
+    if request.method == "POST":
+        assignment.chapter = get_object_or_404(Chapter,id=request.POST.get('chapter'))
+        assignment.title = request.POST.get('title')
+        assignment.description = request.POST.get('description')
+        assignment.due_date = request.POST.get('due_date')
+        assignment.marks = request.POST.get('marks')
+
+        if request.POST.get('file'):
+            assignment.file = request.POST.get('file')
+        assignment.save()
+        messages.success(request,"Assignment updated successfully!")
+        return redirect('assignment_list')
+    return render(request,"assignments/assignment_update.html",{'assignment':assignment,'chapters':chapters})
+
+def assignment_delete(request,id):
+    assignment = get_object_or_404(Assignment,id=id)
+    assignment.delete()
+    messages.success(request,"Assignment deleted successfully!")
+    return redirect('assignment_list')
 
 # Create your views here.
+
 def BASE(request):
     return render(request, 'index.html')
-
 # def BASET(request):
 #     return render(request, 'teacher/teacher_dashboard.html')
 def BASES(request):

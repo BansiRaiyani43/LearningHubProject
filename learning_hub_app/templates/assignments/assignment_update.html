@@ -1,0 +1,114 @@
+{% extends 'assignments/basefile.html' %}
+{% block body %}
+
+<section class="section">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        
+        <div class="card shadow-sm border-0 rounded-4 mt-5">
+          <div class="card-body p-4">
+            
+            <!-- Page Heading -->
+            <h3 class="text-center mb-4 fw-semibold">Update Assignment</h3>
+
+            <!-- Django Messages -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <!-- Form Start -->
+            <form method="POST">
+              {% csrf_token %}
+                
+              <div class="mb-3">
+                    <label class="form-label">Select Chapter</label>
+                    <select name="chapter" class="form-select" required>
+                        {% for chapter in chapters %}
+                            <option value="{{ chapter.id }}" 
+                                {% if chapter.id == assignment.chapter.id %}selected{% endif %}>
+                                Chapter {{ chapter.number }} - {{ chapter.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Title</label>
+                <input 
+                  type="text" 
+                  name="title" 
+                  class="form-control rounded-3" 
+                  placeholder="Enter assignment title" 
+                  value="{{ assignment.title}}" 
+                  required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea 
+                  name="description" 
+                  class="form-control rounded-3" 
+                  rows="4" 
+                  placeholder="Write assignment description..." 
+                  required>{{ assignment.description }}</textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Due Date</label>
+                <input 
+                  type="date" 
+                  name="due_date" 
+                  class="form-control rounded-3" 
+                  value="{{ assignment.due_date|date:'Y-m-d' }}" 
+                  required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Marks</label>
+                <input 
+                  type="number" 
+                  name="marks" 
+                  class="form-control rounded-3" 
+                  value="{{ assignment.marks }}" 
+                  required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Replace File (optional)</label>
+                <input type="file" name="file" class="form-control">
+
+                {% if assignment.file %}
+                    <p class="mt-2">
+                        Current File:
+                        <a href="{{ assignment.file.url }}" target="_blank">
+                            {{ assignment.file.name }}
+                        </a>
+                    </p>
+                {% endif %}
+              </div>
+
+              <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
+                  {% if subject %}Update{% else %}Save{% endif %}
+                </button>
+                <a href="{% url 'assignment_list' %}" class="btn btn-danger px-4 py-2 rounded-3 fw-semibold ms-2">
+                  Cancel
+                </a>
+              </div>
+            </form>
+            <!-- Form End -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %} 

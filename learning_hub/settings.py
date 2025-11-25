@@ -130,3 +130,6 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'learning_hub_app.User'
 
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/teacher/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'

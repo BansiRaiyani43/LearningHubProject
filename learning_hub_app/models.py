@@ -44,7 +44,17 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"chapter {self.number} : {self.title}"
+    
+class Assignment(models.Model):
+    chapter = models.ForeignKey('Chapter',on_delete=models.CASCADE,related_name='assignments')
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True,null=True)
+    due_date = models.DateField(null=True,blank=True)
+    marks = models.PositiveBigIntegerField(default=0)
+    file = models.FileField(upload_to='assignments/',blank=True,null=True)
 
+    def __str__(self):
+        return f"{self.title} (Chapter{self.chapter.number})"
 
 
 
@@ -56,6 +66,3 @@ class Chapter(models.Model):
 #         email=models.EmailField(max_length=100,default="")
 #         # phone=models.BigIntegerField(default=0)
 #         password=models.CharField(max_length=10)
-
-
-
