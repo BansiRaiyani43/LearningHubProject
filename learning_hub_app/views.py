@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from .models import User,Course,Subject,Chapter,Assignment
+from .models import User,Course,Subject,Chapter,Assignment,AssignmentSubmission
 from django.db import IntegrityError
 
 
@@ -291,9 +292,9 @@ def assignment_add(request):
     
     return render(request,"assignments/add_assignments.html",{'chapters':chapters})
 
-def assignment_view(request,id=id):
+def assignment_detail(request,id=id):
     assignment = get_object_or_404(Assignment, id=id)
-    return render(request,"assignments/view_assignments.html",{"assignment":assignment})
+    return render(request,"assignments/detail_assignments.html",{"assignment":assignment})
 
 def assignment_update(request,id):
     assignment = get_object_or_404(Assignment,id=id)
@@ -318,6 +319,117 @@ def assignment_delete(request,id):
     assignment.delete()
     messages.success(request,"Assignment deleted successfully!")
     return redirect('assignment_list')
+
+#------------------Assignment-Submission-----------------------#
+@login_required
+def submission_list(request):
+    if request.user.role == 'teacher':
+        submissions = AssignmentSubmission.objects.select_related('assignment','student').all()
+    else:
+        submissions = AssignmentSubmission.objects.filter(student=request.user).select_related('assignment')
+    return render(request,"submissions/submission_list.html",{'submissions':submissions})
+
+@login_required
+def submission_add(request,assignment_id):
+    assignment = get_object_or_404(Assignment,id=assignment_id)
+
+    existing = AssignmentSubmission.objects.filter(assignment=assignment,student=request.user).first()
+    if existing:
+        messages.info(request, "you already submitted this assignment. you can update it instead")
+        return redirect('submission_view',id=existing.id)
+    
+    if request.method == "POST":
+        answer_text = request.POST.get('answer_text')
+        file = request.FILES.get('file')
+        today = timezone.now().date()
+        if assignment.due_date and today > assignment.due_date:
+            status = 'late'
+        else:
+            status = 'on_time'
+
+        sub = AssignmentSubmission.objects.create(
+            assignment = assignment,
+            student = request.user,
+            answer_text = answer_text,
+            file = file,
+            status = status)
+        messages.success(request, "Assignment submitted successfully!")
+        return redirect('submission_view', id=sub.id)
+    
+    return render(request, "submissions/submission_add.html",{'assignment':assignment})
+
+def submission_view(request,id):
+    submission = get_object_or_404(AssignmentSubmission,id=id)
+    if request.user.role != 'teacher' and submission.student != request.user:
+        messages.error(request,"you don't have permission to view this assignment")
+        return redirect('submissions')
+    
+    return render(request,"submissions/submission_view.html",{'submission':submission})
+
+@login_required
+def submission_update(request,id):
+    submission = get_object_or_404(AssignmentSubmission, id=id)
+    assignment = submission.assignment
+
+    if submission.student != request.user:
+        messages.error(request,"you don't have permission to edit this assignment")
+        return redirect('submissions')
+    
+    if submission.mark_awarded is not None:
+        messages.warning(request,"this submiision has been graded and you cannot be edited")
+        return redirect('submission_view', id=submission.id)
+    
+    if request.method == "POST":
+        submission.answer_text = request.POST.get('answer_text')
+        if request.FILES.get('file'):
+            submission.file == request.FILES.get('file')
+
+        submission.submitted_at = timezone.now()
+        today = timezone.now().date()
+        if assignment.due_date and today > assignment.due_date:
+            submission.status == 'late'
+        else:
+            submission.status == 'on_time'
+
+        submission.save()
+        messages.success(request,"Submission updated")
+        return redirect('submission_view', id=submission.id)
+    
+    return render(request,"submissions/submission_update.html",{'submission':submission})
+
+@login_required
+def submission_grade(request, id):
+    if request.user.role != 'teacher':
+        messages.error(request,"only teachers can grade submissions.")
+        return redirect('submissions')
+    
+    submission = get_object_or_404(AssignmentSubmission, id=id)
+
+    if request.method == "POST":
+        marks = request.POST.get('mark_awarded')
+        feedback = request.POST.get('feedback')
+
+        submission.mark_awarded = int(marks) if marks not in (None,'') else None
+        submission.feedback = feedback
+        submission.graded_by = request.user
+        submission.graded_at = timezone.now()
+        submission.save()
+        messages.success(request,"Submission graded")
+        return redirect('submission_view', id=submission.id)
+    
+    return render(request,"submissions/submission_grade.html",{'submission':submission})
+
+@login_required
+def submission_delete(request,id):
+    submission = get_object_or_404(AssignmentSubmission, id=id)
+
+    if not(request.user.role == 'teacher' or submission.student == request.user):
+        messages.error(request,"you don't have permission to delete this submission")
+        return redirect('submissions')
+    
+    submission.delete()
+    messages.success(request,"submission deleted")
+    return redirect('submissions')
 
 # Create your views here.
 

@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
@@ -56,7 +58,30 @@ class Assignment(models.Model):
     def __str__(self):
         return f"{self.title} (Chapter{self.chapter.number})"
 
+class AssignmentSubmission(models.Model):
 
+    STATUS_CHOICES = (
+        ('on_time', 'On Time'),
+        ('late', 'Late')
+    )
+
+    assignment = models.ForeignKey('Assignment',on_delete=models.CASCADE,related_name='submissions')
+    student = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='submissions')
+    submitted_at = models.DateTimeField(default=timezone.now)
+    file = models.FileField(upload_to='submissions/',blank=True,null=True)
+    mark_awarded = models.PositiveBigIntegerField(blank=True,null=True)
+    answer_text = models.TextField(blank=True,null=True)
+    status = models.CharField(max_length=10,choices=STATUS_CHOICES,default='on_time')
+    graded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,null=True,blank=True,related_name='graded_submission')
+    graded_at = models.DateTimeField(null=True, blank=True)
+    feedback = models.TextField(blank=True,null=True)
+
+    class Meta:
+        ordering = ['-submitted_at']
+        unique_together = ('assignment', 'student')
+
+    def __str__(self):
+        return f"{self.assignment.title} by {self.student.username}"
 
 # from django.db import models
 

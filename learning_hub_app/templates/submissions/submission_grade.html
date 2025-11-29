@@ -1,0 +1,55 @@
+{% extends 'submissions/basefile.html' %}
+{% block body %}
+
+<section class="section">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        
+        <div class="card shadow-sm border-0 rounded-4 mt-5">
+          <div class="card-body p-4">
+            
+            <!-- Page Heading -->
+            <h3 class="text-center mb-4 fw-semibold">Grade: {{ submission.assignment.title }}</h3>
+            <p><strong>Student:</strong> {{ submission.student.username }}</p>
+
+            <!-- Django Messages -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <!-- Form Start -->
+            <form method="POST" >
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Mark awarded:</label>
+                <input type="number" name="mark_awarded" class="form-control rounded-3" value="{{ submisiion.mark_awarded }}"> 
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Feedback</label>
+                <textarea name="feedback" class="form-control rounded-3" rows="4">{{ submission.feedback }}</textarea>
+              </div>
+
+                <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">Save Grade</button>
+                <a href="{% url 'submission_view' submission.id %}" class="btn btn-danger px-4 py-2 rounded-3 fw-semibold ms-2">Cancel</a>
+              </div>  
+
+            </form>
+            <!-- Form End -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %} 

@@ -1,0 +1,70 @@
+{% extends 'submissions/basefile.html' %}
+{% block body %}
+
+<div class="container-fluid mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm p-4" style="border-radius: 20px; background: #fff;">
+        <h1 class="text-center fw-bold mb-4">{{ submission.assignment.title }}</h1>
+
+        <div class="mb-1">
+          <h3 class="text-primary mb-1">Student :   {{ submission.student.username }}</h3>
+          <p class="text-dark"></p>
+        </div>
+        <p><strong>Submitted_at:</strong> {{ submission.submitted_at|date:'Y-m-d H:i' }} </p>
+        <p><strong>Status:</strong>
+            {% if submission.status == 'late' %}
+                <span class="text-danger">Late</span>
+            {% else %}
+                <span class="text-success">On Time</span>
+            {% endif %}</p> 
+
+        {% if submission.file %}
+            <div class="mb-3">
+            <h5 class="text-body ">file :   </h5>
+            <p class="text-dark"> <a href="{{ submission.file.url }}" target="_blank">{{ submission.file.name }}</a> </p>
+            </div>
+        {% endif %}
+
+        <div class="mb-1">
+         <p><strong>Marks:</strong> 
+            {% if submission.mark_awarded is not None %}
+                {{ submission.mark_awarded }}
+            {% else %}
+                <span class="text-muted">Not Graded</span>
+            {% endif %}
+         </p>
+        </div>
+    
+        {% if submission.answer_text %}
+            <div class="mb-1">
+            <h5 class="text-muted ">Ansewr (Text) :   </h5>
+            <p class="text-dark">{{ submission.answer_text|linebreaks }}</p>
+            </div>
+        {% endif %}
+        
+
+        {% if assignment.file %}
+            <div class="mb-3">
+                <h5>Feedback</h5>
+                <p>{{ submission.feedback|linebreaks }}</p>
+                <p class="text-muted-small">Graded by {{ submission.graded_by.username }} at {{ submission.graded_at|date:'Y-m-d H:i' }}</p>
+            </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            {% if request.user.role == 'teacher' %}
+                <a href="{% url 'assignment_list' %}" class="btn btn-success">Grade</a>
+            {% endif %}
+            {% if submission.student == request.user and submisiion.mark_awarded is None %}
+                <a href="{% url 'assignment_list' %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'assignment_list' %}" class="btn btn-danger">Delete</a>
+            {% endif %}
+            <a href="{% url 'submissions' %}" class="btn btn-primary">← Back to Submission  List</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
