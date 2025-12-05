@@ -10,14 +10,13 @@
     <aside class="sidebar-nav-wrapper">
       <div class="navbar-logo">
         <a href="index.html">
-          <img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo" />
+          <img class="mx-auto" src="{% static 'assets/images/logo/logo-icon-big.svg' %}" alt="Logo">
         </a>
       </div>
       <nav class="sidebar-nav">
         <ul>
           <li class="nav-item">
-            <a
-              href="{% url 'teacher_dashboard' %}">
+            <a href="{% url 'teacher_dashboard' %}">
               <span class="icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -41,15 +40,7 @@
             </a>
           </li>
           <li class="nav-item nav-item-has-children">
-            <a
-              href="{% url 'assignment_list' %}"
-              class="collapsed"
-              data-bs-toggle="collapse"
-              data-bs-target="#ddmenu_2"
-              aria-controls="ddmenu_2"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
+            <a href="{% url 'assignment_list' %}">
               <span class="icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path

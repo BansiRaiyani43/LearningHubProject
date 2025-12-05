@@ -75,7 +75,7 @@ def user_login(request):
             elif user.role == "teacher":
                 return redirect("teacher_dashboard")
             elif user.role == "admin":
-                return redirect("admin_dashbord.html")
+                return redirect("admin_dashboard")
             else:
                 messages.error(request, "Invalid role assigned.")
                 return redirect('login')
@@ -435,8 +435,8 @@ def submission_delete(request,id):
 
 def BASE(request):
     return render(request, 'index.html')
-# def BASET(request):
-#     return render(request, 'teacher/teacher_dashboard.html')
+def BASET(request):
+     return render(request, 'teacher/teacher_dashboard.html')
 def BASES(request):
     return render(request, 'student/index.html')
 
