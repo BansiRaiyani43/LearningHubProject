@@ -10,14 +10,15 @@
     <aside class="sidebar-nav-wrapper">
       <div class="navbar-logo">
         <a href="index.html">
-          <img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo" />
+          <!-- correct promo-box image -->
+          <img class="mx-auto" src="{% static 'assets/images/logo/logo-icon-big.svg' %}" alt="Logo" />
         </a>
       </div>
       <nav class="sidebar-nav">
         <ul>
           <li class="nav-item">
             <a
-              href="{% url 'student_dashboard' %}">
+              href="{% url 'student_dashboard' %}" onclick="window.location.href='{% url 'teacher_dashboard' %}'; return false;">
               <span class="icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -30,7 +31,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'courses_list' %}">
+            <a href="{% url 'courses_list' %}" onclick="window.location.href='{% url 'assignment_list' %}'; return false;">
               <span class="icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path

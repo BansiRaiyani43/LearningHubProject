@@ -171,6 +171,7 @@ def subject_list(request):
     return render(request, "teacher/subject_list.html", {'s': subjects,'course': None,})
 
 def subject_add(request):
+    
     courses = Course.objects.all()
     if request.method == "POST":
         name = request.POST.get('name')
@@ -292,7 +293,7 @@ def assignment_add(request):
     
     return render(request,"assignments/add_assignments.html",{'chapters':chapters})
 
-def assignment_detail(request,id=id):
+def assignment_detail(request,id):
     assignment = get_object_or_404(Assignment, id=id)
     return render(request,"assignments/detail_assignments.html",{"assignment":assignment})
 
@@ -308,7 +309,7 @@ def assignment_update(request,id):
         assignment.marks = request.POST.get('marks')
 
         if request.POST.get('file'):
-            assignment.file = request.POST.get('file')
+            assignment.file = request.FILES.get('file')
         assignment.save()
         messages.success(request,"Assignment updated successfully!")
         return redirect('assignment_list')
@@ -382,14 +383,14 @@ def submission_update(request,id):
     if request.method == "POST":
         submission.answer_text = request.POST.get('answer_text')
         if request.FILES.get('file'):
-            submission.file == request.FILES.get('file')
+            submission.file = request.FILES.get('file')
 
         submission.submitted_at = timezone.now()
         today = timezone.now().date()
         if assignment.due_date and today > assignment.due_date:
-            submission.status == 'late'
+            submission.status = 'late'
         else:
-            submission.status == 'on_time'
+            submission.status = 'on_time'
 
         submission.save()
         messages.success(request,"Submission updated")
